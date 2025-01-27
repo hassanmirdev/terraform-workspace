@@ -9,7 +9,7 @@ variable "instance_type" {
   default = {
     "dev" = "t2.nano"
     "staging" = "t2.medium"
-    "production" = "t2.nano"
+    "production" = "t2.medium"
   }
 }
 module "ec2_instance" {
