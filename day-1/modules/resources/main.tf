@@ -24,13 +24,13 @@ resource "aws_instance" "example" {
 #  skip_final_snapshot  = true
 #}
 
-resource "aws_s3_bucket" "example-bucket" {
-  bucket = "examples3bucketday1" 
-}
+# resource "aws_s3_bucket" "example-bucket" {
+ # bucket = "examples3bucketday1" 
+#}
 
-resource "aws_s3_bucket_versioning" "example-bucket-versioning" {
-  bucket = aws_s3_bucket.example-bucket.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
+# resource "aws_s3_bucket_versioning" "example-bucket-versioning" {
+ # bucket = aws_s3_bucket.example-bucket.id
+ # versioning_configuration {
+  #  status = "Enabled"
+  # }
+# }
