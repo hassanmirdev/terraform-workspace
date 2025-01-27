@@ -1,4 +1,4 @@
-name: Working with Multiple Environments
+name: workspace with github actions
 on:
   workflow_dispatch:
     inputs:
@@ -62,7 +62,7 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Generate Markdown with Terraform Docs opon pull request.
-        if: ${{ github.event_name == 'pull_request' }}
+      #  if: ${{ github.event_name == 'pull_request' }}
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           working-dir: .
@@ -77,7 +77,6 @@ jobs:
       # Apply the Terraform configuration to AWS
       - name: Apply Terraform Configuration
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # Only apply on push to main branch (after PR merge)
-      - name: Select Terraform Workspace
         run: |
           terraform workspace show
           terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
