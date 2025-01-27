@@ -51,16 +51,16 @@ jobs:
       - name: Select Terraform Workspace
         run: |
          terraform workspace show
+         terraform workspace new dev
+         terraform workspace new staging
+         terraform workspace new production
+         terraform workspace show
         # terraform workspace delete ${{ github.event.inputs.environment }} -force
         #  terraform workspace delete dev -force
-         # terraform workspace new dev
-         # terraform workspace delete dev -force
-         # terraform workspace new staging
-         # terraform workspace new production
-         # terraform workspace select ${{ github.event.inputs.environment }} 
-         
-          # Create workflow if it does not alreadt exists
-          # terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
+        # terraform workspace delete dev -force 
+        # terraform workspace select ${{ github.event.inputs.environment }} 
+        # Create workflow if it does not alreadt exists
+        # terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
 
       # Generate Terraform Plan
       - name: Generate Terraform Plan
