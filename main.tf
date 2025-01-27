@@ -8,7 +8,7 @@ variable "instance_type" {
 
   default = {
     "dev" = "t2.nano"
-    "staging" = "t2.medium"
+    "staging" = "t2.nano"
     "production" = "t2.medium"
   }
 }
