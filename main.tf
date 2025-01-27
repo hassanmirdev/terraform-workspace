@@ -1,3 +1,17 @@
+variable "ami" {
+  description = "value"
+}
+
+variable "instance_type" {
+  description = "value"
+  type = map(string)
+
+  default = {
+    "dev" = "t2.micro"
+    "staging" = "t2.medium"
+    "production" = "t2.xlarge"
+  }
+}
 module "ec2_instance" {
   source = "./day-1/modules/resources"
   ami = var.ami
