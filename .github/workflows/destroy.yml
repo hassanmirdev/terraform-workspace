@@ -25,7 +25,6 @@ jobs:
 
     - name: remove terraform cache Terraform Init
       run: |
-       rm -rf .terraform/
        terraform init
       
     - name: Terraform Destroy
