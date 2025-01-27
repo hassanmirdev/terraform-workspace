@@ -49,11 +49,11 @@ jobs:
           terraform init
 
       # Select or Create Terraform Workspace
-      - name: Select or Create Terraform Workspace
-        run: |
-          terraform workspace show
-          terraform workspace new production
-          terraform workspace select dev
+     # - name: Select or Create Terraform Workspace
+      #  run: |
+       #   terraform workspace show
+        #  terraform workspace new production
+         # terraform workspace select dev
 
       # Generate Terraform Plan
       - name: Generate Terraform Plan
