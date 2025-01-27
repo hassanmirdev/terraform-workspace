@@ -1,4 +1,4 @@
-name: terrafoprm
+name: terraform
 
 on:
   workflow_dispatch:
@@ -14,18 +14,20 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main  # Trigger apply after PR merge to main
 
 jobs:
   terraform-workspace:
     runs-on: ubuntu-latest
-    # Set the environment dynamically based on the event type
-    environment: ${{ github.event.inputs.environment || 'dev' }}  # Use 'dev' if the input is missing
+    environment: ${{ github.event.inputs.environment || 'dev' }}  # Dynamically set the environment
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: 'main'
+          ref: ${{ github.ref }}
 
       # Set up Terraform
       - name: Set up Terraform
@@ -44,7 +46,7 @@ jobs:
         run: |
           git config --global user.email "hassan.mirsf@gmail.com"
           git config --global user.name "hassanmirdev"
-      
+
       # Initialize Terraform
       - name: Initialize Terraform
         run: |
@@ -56,18 +58,17 @@ jobs:
         run: |
           echo "Selected environment: ${{ github.event.inputs.environment || 'dev' }}"
 
-      # Select Terraform Workspace Dynamically.
+      # Select Terraform Workspace Dynamically
       - name: Select Terraform Workspace
         run: |
-          echo "Selected environment: ${{ github.event.inputs.environment || 'dev' }}"
-          
-          # Ensure we're selecting the workspace correctly
           terraform workspace show || terraform workspace select ${{ github.event.inputs.environment || 'dev' }} || terraform workspace new ${{ github.event.inputs.environment || 'dev' }}
 
-      # Generate Terraform Plan
+      # Generate Terraform Plan for PR
       - name: Generate Terraform Plan
+        if: ${{ github.event_name == 'pull_request' }}
         run: terraform plan -out=tfplan
 
+      # Generate Markdown with Terraform Docs
       - name: Generate Markdown with Terraform Docs
         if: ${{ github.event_name == 'pull_request' }}
         uses: terraform-docs/gh-actions@v1.3.0
