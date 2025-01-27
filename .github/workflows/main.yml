@@ -16,6 +16,7 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}  # Reference the environment from the input
 
     steps:
       - name: Checkout code
@@ -47,20 +48,20 @@ jobs:
           rm -rf .terraform
           terraform init
 
-      # Select the Terraform workspace based on the input environment
-      - name: Select Terraform Workspace
+      # Select or Create Terraform Workspace
+      - name: Select or Create Terraform Workspace
         run: |
-         terraform workspace show
-         terraform workspace new dev
-         terraform workspace new staging
-         terraform workspace new production
-         terraform workspace show
-        # terraform workspace delete ${{ github.event.inputs.environment }} -force
-        #  terraform workspace delete dev -force
-        # terraform workspace delete dev -force 
-        # terraform workspace select ${{ github.event.inputs.environment }} 
-        # Create workflow if it does not alreadt exists
-        # terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
+          terraform workspace select ${{ github.event.inputs.environment }} -or-create
+
+      # Destroy Resources (if needed)
+      - name: Destroy Resources (if needed)
+        run: |
+          terraform destroy -auto-approve
+
+      # Delete the Terraform Workspace after destroying resources
+      #- name: Delete Terraform Workspace
+     #  run: |
+       #  terraform workspace delete ${{ github.event.inputs.environment }} -force
 
       # Generate Terraform Plan
       - name: Generate Terraform Plan
@@ -77,8 +78,8 @@ jobs:
           git-push-user-name: "hassanmirdev"
           git-push-user-email: "hassan.mirsf@gmail.com"
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Use the secret to authenticate
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       # Apply the Terraform configuration to AWS
      # - name: Apply Terraform Configuration
-    #   run: terraform apply -auto-approve tfplan
+     #   run: terraform apply -auto-approve tfplan
