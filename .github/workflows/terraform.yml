@@ -1,11 +1,11 @@
 name: workspace with github actions
+
 on:
   workflow_dispatch:
     inputs:
       environment:
         description: 'Select the environment to deploy (dev, staging, production)'
         required: true
-       # default: 'dev'
         type: choice
         options:
           - dev
@@ -30,8 +30,8 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2.0.3
         with:
-          terraform_version: 1.10.3  # 
-          
+          terraform_version: 1.10.3  
+
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -53,16 +53,16 @@ jobs:
       # Select Terraform Workspace Dynamically.
       - name: Select Terraform Workspace
         run: |
+          echo "Selected environment: ${{ github.event.inputs.environment }}"
           terraform workspace show
           terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
-
 
       # Generate Terraform Plan
       - name: Generate Terraform Plan
         run: terraform plan -out=tfplan
 
-      - name: Generate Markdown with Terraform Docs opon pull request.
-      #  if: ${{ github.event_name == 'pull_request' }}
+      - name: Generate Markdown with Terraform Docs upon pull request.
+        if: ${{ github.event_name == 'pull_request' }}
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           working-dir: .
