@@ -54,6 +54,10 @@ jobs:
        #   terraform workspace show
         #  terraform workspace new production
          # terraform workspace select dev
+      - name: Select Terraform Workspace
+        run: |
+          terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
+
 
       # Generate Terraform Plan
       - name: Generate Terraform Plan
