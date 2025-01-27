@@ -50,9 +50,9 @@ jobs:
       # Select the Terraform workspace based on the input environment
       - name: Select Terraform Workspace
         run: |
-          terraform workspace delete dev
+          terraform workspace delete dev -force
           terraform workspace new dev
-          terraform workspace delete dev
+          terraform workspace delete dev -force
           terraform workspace new staging
           terraform workspace new production
           terraform workspace select ${{ github.event.inputs.environment }} 
