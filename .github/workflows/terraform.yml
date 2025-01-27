@@ -11,9 +11,13 @@ on:
           - dev
           - staging
           - production
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
+    
 
 jobs:
   terraform-workspace:
@@ -78,6 +82,6 @@ jobs:
       - name: Apply Terraform Configuration
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # Only apply on push to main branch (after PR merge)
         run: |
-          terraform workspace show
-          terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
+          # terraform workspace show
+          # terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
           terraform apply -auto-approve tfplan
