@@ -7,7 +7,7 @@ variable "instance_type" {
   type = map(string)
 
   default = {
-    "dev" = "t2.micro"
+    "dev" = "t2.nano"
     "staging" = "t2.medium"
     "production" = "t2.xlarge"
   }
