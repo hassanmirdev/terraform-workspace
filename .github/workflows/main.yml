@@ -1,13 +1,17 @@
 name: Automate AWS Infrastructure Deployment
 
 on:
- workflow_dispatch
-#  push:
- #   branches:
-  #    - main
-  # pull_request:
-   # branches:
-    #  - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment to deploy (dev, staging, production)'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - production
 
 jobs:
   terraform:
@@ -17,7 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-         ref: 'main'
+          ref: 'main'
 
       # Set up Terraform
       - name: Set up Terraform
@@ -31,45 +35,29 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: "us-east-1"
-      - name: configure git
+
+      - name: Configure Git
         run: |
           git config --global user.email "hassan.mirsf@gmail.com"
           git config --global user.name "hassanmirdev"
       
-     # - name: install lfs
-      #  run: |
-      #   git lfs install
-       #  git lfs track ".terraform/**/*"
-        # git add .gitattributes
-        # git commit -m "Add .terraform files to Git LFS"
-        # git push origin main
-
-
       # Initialize Terraform
       - name: Initialize Terraform
-        run: | 
-         rm -rf .terraform
-         terraform init
-      # Setup terraform workspace
-      - name: working with workspaces
         run: |
-          terraform workspace new dev
-          terraform workspace new stage
-          terraform workspace new prod
+          rm -rf .terraform
+          terraform init
 
-      - name: switch to workflow
+      # Select the Terraform workspace based on the input environment
+      - name: Select Terraform Workspace
         run: |
-         terraform workspace select dev
-          
+          terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
+
       # Generate Terraform Plan
       - name: Generate Terraform Plan
         run: terraform plan -out=tfplan
 
-      # Generate and push Terraform docs for Pull Request review
-      
-      
+      # Generate Markdown with Terraform Docs
       - name: Generate Markdown with Terraform Docs
-      #  if: ${{ github.event_name == 'pull_request' }}
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           working-dir: .
@@ -82,7 +70,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Use the secret to authenticate
 
       # Apply the Terraform configuration to AWS
-      - name: Apply Terraform Configuration
-       # if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # Only apply on push to main branch (after PR merge)
-        run: terraform apply -auto-approve tfplan
-       
+     # - name: Apply Terraform Configuration
+    #   run: terraform apply -auto-approve tfplan
