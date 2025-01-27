@@ -62,8 +62,8 @@ jobs:
         run: terraform plan -out=tfplan
 
       
-      - name: Generate Markdown with Terraform Docs opon pull request.
-      #  if: ${{ github.event_name == 'pull_request' }}
+       # Generate Markdown with Terraform Docs
+      - name: Generate Markdown with Terraform Docs
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           working-dir: .
@@ -73,9 +73,8 @@ jobs:
           git-push-user-name: "hassanmirdev"
           git-push-user-email: "hassan.mirsf@gmail.com"
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Use the secret to authenticate
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       # Apply the Terraform configuration to AWS
-    #  - name: Apply Terraform Configuration
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # Only apply on push to main branch (after PR merge)
+      - name: Apply Terraform Configuration
         run: terraform apply -auto-approve tfplan
