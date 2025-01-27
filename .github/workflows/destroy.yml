@@ -1,34 +1,55 @@
-name: Destroy the AWS Ec2 infrastructure.
+name: Destroy the AWS EC2 infrastructure.
 run-name: Destroy EC2
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment to destroy (dev, staging, production)'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - production
 
 jobs:
   terraform-destroy:
-    name: Destroy AWS Ec2 Infrastructure
+    name: Destroy AWS EC2 Infrastructure
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}  # Reference the environment from the input
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v2.0.3
-      with:
-        terraform_version: 1.10.3
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2.0.3
+        with:
+          terraform_version: 1.10.3
 
-    - name: AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: "us-east-1"
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "us-east-1"
 
-    - name: remove terraform cache Terraform Init
-      run: |
-       rm -rf .terraform
-       terraform init
+      - name: Remove Terraform cache and initialize
+        run: |
+          rm -rf .terraform
+          terraform init
        
-       
-      
-    - name: Terraform Destroy
-      run: terraform destroy -auto-approve
+      # Select the correct workspace or create a new one based on the selected environment
+      - name: Select or Create Terraform Workspace
+        run: |
+          terraform workspace select ${{ github.event.inputs.environment }}
+
+      # Run Terraform Destroy to tear down the resources
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+
+      # Optionally delete the workspace after destruction (if desired)
+      # - name: Delete Terraform Workspace (optional)
+      # run: |
+      # terraform workspace delete ${{ github.event.inputs.environment }} -force
