@@ -50,9 +50,17 @@ jobs:
         run: | 
          rm -rf .terraform
          terraform init
-       
-         
+      # Setup terraform workspace
+      - name: working with workspaces
+        run: |
+          terraform workspace new dev
+          terraform workspace new stage
+          terraform workspace new prod
 
+      - name: switch to workflow
+        run: |
+         terraform workspace select dev
+          
       # Generate Terraform Plan
       - name: Generate Terraform Plan
         run: terraform plan -out=tfplan
