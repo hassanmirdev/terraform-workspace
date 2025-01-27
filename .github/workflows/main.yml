@@ -52,7 +52,7 @@ jobs:
       - name: Select or Create Terraform Workspace
         run: |
           terraform workspace show
-          terraform workspace select staging
+          terraform workspace new production
           terraform workspace select dev
 
       # Generate Terraform Plan
