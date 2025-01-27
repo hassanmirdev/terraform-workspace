@@ -58,11 +58,11 @@ jobs:
         run: |
           terraform destroy -auto-approve
 
-      # Delete the Terraform Workspace after destroying resources
-      #- name: Delete Terraform Workspace
-     #  run: |
-       #  terraform workspace delete ${{ github.event.inputs.environment }} -force
-
+      # Create the Terraform Workspace 
+      - name: create Terraform Workspace
+        run: |
+         terraform workspace new staging
+     
       # Generate Terraform Plan
       - name: Generate Terraform Plan
         run: terraform plan -out=tfplan
