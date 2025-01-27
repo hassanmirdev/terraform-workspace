@@ -73,5 +73,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       # Apply the Terraform configuration to AWS
-     # - name: Apply Terraform Configuration
-     #   run: terraform apply -auto-approve tfplan
+      - name: Apply Terraform Configuration
+        run: terraform apply -auto-approve tfplan
