@@ -51,7 +51,8 @@ jobs:
       # Select or Create Terraform Workspace
       - name: Select or Create Terraform Workspace
         run: |
-          terraform workspace new staging
+          terraform workspace show
+          terraform workspace select staging
 
       # Generate Terraform Plan
       - name: Generate Terraform Plan
