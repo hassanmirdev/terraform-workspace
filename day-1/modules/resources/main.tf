@@ -34,3 +34,14 @@ resource "aws_instance" "example" {
   #  status = "Enabled"
   # }
 # }
+
+terraform {
+backend "s3" {
+bucket = "terraformgithubbucket"
+key = "tf-github/terrafor.tfstate"
+region = "us-east-1"
+encrypt = true
+dynamodb_table = "terraform-lock-table"
+acl = "bucket-owner-full-control" # S3 bucket ACL for access control
+}
+}
