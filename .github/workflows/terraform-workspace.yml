@@ -1,5 +1,4 @@
-name: Automate AWS Infrastructure Deployment
-
+name: Working with Multiple Environments
 on:
   workflow_dispatch:
     inputs:
