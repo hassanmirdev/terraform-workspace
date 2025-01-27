@@ -23,7 +23,7 @@ No resources.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_ami"></a> [ami](#input\_ami) | value | `any` | n/a | yes |
-| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | value | `map(string)` | <pre>{<br/>  "dev": "t2.micro",<br/>  "production": "t2.xlarge",<br/>  "staging": "t2.medium"<br/>}</pre> | no |
+| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | value | `map(string)` | <pre>{<br/>  "dev": "t2.nano",<br/>  "production": "t2.nano",<br/>  "staging": "t2.medium"<br/>}</pre> | no |
 
 ## Outputs
 
