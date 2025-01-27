@@ -50,7 +50,15 @@ jobs:
       # Select the Terraform workspace based on the input environment
       - name: Select Terraform Workspace
         run: |
-          terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
+          terraform workspace delete dev
+          terraform workspace new dev
+          terraform workspace delete dev
+          terraform workspace new staging
+          terraform workspace new production
+          terraform workspace select ${{ github.event.inputs.environment }} 
+         
+          # Create workflow if it does not alreadt exists
+          # terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
 
       # Generate Terraform Plan
       - name: Generate Terraform Plan
