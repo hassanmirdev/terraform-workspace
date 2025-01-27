@@ -51,7 +51,7 @@ jobs:
       # Select or Create Terraform Workspace
       - name: Select or Create Terraform Workspace
         run: |
-          terraform workspace select ${{ github.event.inputs.environment }} -or-create
+          terraform workspace new staging
 
       # Generate Terraform Plan
       - name: Generate Terraform Plan
