@@ -1,4 +1,4 @@
-name: workspace with github actions
+name: terrafoprm
 
 on:
   workflow_dispatch:
@@ -18,7 +18,8 @@ on:
 jobs:
   terraform-workspace:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}  # Reference the environment from the input
+    # Set the environment dynamically based on the event type
+    environment: ${{ github.event.inputs.environment || 'dev' }}  # Use 'dev' if the input is missing
 
     steps:
       - name: Checkout code
@@ -50,18 +51,24 @@ jobs:
           rm -rf .terraform
           terraform init
 
+      # Debugging step: Check the value of the input environment
+      - name: Debug Environment Input
+        run: |
+          echo "Selected environment: ${{ github.event.inputs.environment || 'dev' }}"
+
       # Select Terraform Workspace Dynamically.
       - name: Select Terraform Workspace
         run: |
-          echo "Selected environment: ${{ github.event.inputs.environment }}"
-          terraform workspace show
-          terraform workspace select ${{ github.event.inputs.environment }} || terraform workspace new ${{ github.event.inputs.environment }}
+          echo "Selected environment: ${{ github.event.inputs.environment || 'dev' }}"
+          
+          # Ensure we're selecting the workspace correctly
+          terraform workspace show || terraform workspace select ${{ github.event.inputs.environment || 'dev' }} || terraform workspace new ${{ github.event.inputs.environment || 'dev' }}
 
       # Generate Terraform Plan
       - name: Generate Terraform Plan
         run: terraform plan -out=tfplan
 
-      - name: Generate Markdown with Terraform Docs upon pull request.
+      - name: Generate Markdown with Terraform Docs
         if: ${{ github.event_name == 'pull_request' }}
         uses: terraform-docs/gh-actions@v1.3.0
         with:
@@ -77,5 +84,4 @@ jobs:
       # Apply the Terraform configuration to AWS
       - name: Apply Terraform Configuration
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # Only apply on push to main branch (after PR merge)
-        run: |
-          terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve tfplan
