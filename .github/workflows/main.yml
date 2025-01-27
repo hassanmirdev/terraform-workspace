@@ -53,16 +53,6 @@ jobs:
         run: |
           terraform workspace select ${{ github.event.inputs.environment }} -or-create
 
-      # Destroy Resources (if needed)
-      - name: Destroy Resources (if needed)
-        run: |
-          terraform destroy -auto-approve
-
-      # Create the Terraform Workspace 
-      - name: create Terraform Workspace
-        run: |
-         terraform workspace new staging
-     
       # Generate Terraform Plan
       - name: Generate Terraform Plan
         run: terraform plan -out=tfplan
