@@ -38,6 +38,30 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: "us-east-1"
+      
+      # Terraform Linting
+      - name: Run Terraform Validate
+        run: terraform validate
+
+      # Install TFLint (Terraform Linter)
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      # Run TFLint
+      - name: Run TFLint
+        run: tflint --config .tflint.hcl
+
+      # Install Checkov (Security & Compliance Scanner)
+      - name: Install Checkov
+        run: |
+          curl -sSL https://github.com/bridgecrewio/checkov/releases/download/v2.0.0/checkov-linux-amd64 -o /usr/local/bin/checkov
+          chmod +x /usr/local/bin/checkov
+
+      # Run Checkov
+      - name: Run Checkov to Scan Terraform Code for Security Issues
+        run: checkov -d . --quiet  # `--quiet` suppresses output for passing checks
+
 
       - name: Configure Git
         run: |
