@@ -41,7 +41,9 @@ jobs:
       
       # Terraform Linting
       - name: Run Terraform Validate
-        run: terraform validate
+        run: |
+         rm -rf .terraform  # Clean previous state
+         terraform validate
 
       # Install TFLint (Terraform Linter)
       - name: Install TFLint
