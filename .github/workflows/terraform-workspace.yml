@@ -39,11 +39,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: "us-east-1"
       
-      # Terraform Linting
       - name: Run Terraform Validate
-        run: |
-         rm -rf .terraform  # Clean previous state
-         terraform validate
+        run: |                                
+         rm -rf .terraform
+         terraform init -input=false   # Initialize Terraform (without prompting for user input)
+         terraform validate  # Validate the Terraform configuration
 
       # Install TFLint (Terraform Linter)
       - name: Install TFLint
