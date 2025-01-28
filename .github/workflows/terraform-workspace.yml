@@ -52,7 +52,9 @@ jobs:
 
       # Run TFLint
       - name: Run TFLint
-        run: tflint --config .tflint.hcl
+        run: |
+         tflint --install aws
+         tflint --config .tflint.hcl
 
       # Install Checkov (Security & Compliance Scanner)
       - name: Install Checkov
