@@ -16,7 +16,7 @@ variable "instance_type" {
     condition = (
       terraform.workspace == "dev" && contains(["t2.nano"], var.instance_type[terraform.workspace]) ||
       terraform.workspace == "staging" && contains(["t3.micro"], var.instance_type[terraform.workspace]) ||
-      terraform.workspace == "production" && contains(["t2.small"], var.instance_type[terraform.workspace])
+      terraform.workspace == "production" && contains(["t2.medium"], var.instance_type[terraform.workspace])
     )
     error_message = "Invalid instance type for workspace ${terraform.workspace}. Please use the allowed values based on your workspace."
   }
