@@ -38,29 +38,27 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: "us-east-1"
-      
+        # Terraform validate
       - name: Run Terraform Validate
         run: |                                
          rm -rf .terraform
          terraform init -input=false   # Initialize Terraform (without prompting for user input)
          terraform validate  # Validate the Terraform configuration
 
-     # Install TFLint (if not already installed)
+       # Install TFLint (if not already installed)
       - name: Install TFLint
         run: |
          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
-    # Manually install AWS plugin for TFLint
-    #  - name: Install AWS Plugin for TFLint
-     #   run: |
-      #   curl -L "https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.10.0/aws-linux-amd64" 
-
-    # Run TFLint with the configuration file
+       # Run TFLint with the configuration file
       - name: Run TFLint
         run: tflint --init
-      #  run: tflint --config .tflint.hcl
+   
+      # Run TF Lint to validate
+      - name: TFLint validate
+        run: tflint
 
-      # Install Checkov (Security & Compliance Scanner)
+       # Install Checkov (Security & Compliance Scanner)
       - name: Install Checkov
         run: |
           curl -sSL https://github.com/bridgecrewio/checkov/releases/download/v2.0.0/checkov-linux-amd64 -o /usr/local/bin/checkov
