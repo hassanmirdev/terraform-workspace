@@ -45,23 +45,21 @@ jobs:
          terraform init -input=false   # Initialize Terraform (without prompting for user input)
          terraform validate  # Validate the Terraform configuration
 
-      # Install TFLint (Terraform Linter)
+     # Install TFLint (if not already installed)
       - name: Install TFLint
         run: |
-          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+         curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
+    # Manually install AWS plugin for TFLint
       - name: Install AWS Plugin for TFLint
         run: |
-         mkdir -p /home/runner/.tflint.d/plugins/aws
-         curl -L "https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.10.0/aws-linux-amd64" -o /home/runner/.tflint.d/plugins/aws/aws
-         chmod +x /home/runner/.tflint.d/plugins/aws/aws
-        
-     
-      # Run TFLint
+         mkdir -p ~/.tflint.d/plugins/aws
+         curl -L "https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.10.0/aws-linux-amd64" -o ~/.tflint.d/plugins/aws/aws
+         chmod +x ~/.tflint.d/plugins/aws/aws
+
+    # Run TFLint with the configuration file
       - name: Run TFLint
-        run: |
-         cd /home/runner/.tflint.d/plugins
-         tflint --config .tflint.hcl
+        run: tflint --config .tflint.hcl
 
       # Install Checkov (Security & Compliance Scanner)
       - name: Install Checkov
