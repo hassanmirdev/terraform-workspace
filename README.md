@@ -22,8 +22,8 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_ami"></a> [ami](#input\_ami) | value | `any` | n/a | yes |
-| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | value | `map(string)` | <pre>{<br/>  "dev": "t2.nano",<br/>  "production": "t2.medium",<br/>  "staging": "t2.medium"<br/>}</pre> | no |
+| <a name="input_ami"></a> [ami](#input\_ami) | The AMI to use for the EC2 instance | `any` | n/a | yes |
+| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | A map of allowed instance types per workspace | `map(string)` | <pre>{<br/>  "dev": "t2.nano",<br/>  "production": "t2.medium",<br/>  "staging": "t2.micro"<br/>}</pre> | no |
 
 ## Outputs
 
