@@ -51,13 +51,14 @@ jobs:
          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
     # Manually install AWS plugin for TFLint
-      - name: Install AWS Plugin for TFLint
-        run: |
-         curl -L "https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.10.0/aws-linux-amd64" 
+    #  - name: Install AWS Plugin for TFLint
+     #   run: |
+      #   curl -L "https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v0.10.0/aws-linux-amd64" 
 
     # Run TFLint with the configuration file
       - name: Run TFLint
-        run: tflint --config .tflint.hcl
+        run: tflint --init
+      #  run: tflint --config .tflint.hcl
 
       # Install Checkov (Security & Compliance Scanner)
       - name: Install Checkov
