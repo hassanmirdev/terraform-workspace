@@ -60,6 +60,7 @@ jobs:
       # Run TFLint
       - name: Run TFLint
         run: |
+         cd /home/runner/.tflint.d/plugins
          tflint --config .tflint.hcl
 
       # Install Checkov (Security & Compliance Scanner)
